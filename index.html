@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clashers Collide | Private Server</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="overlay" class="hidden">
+        
+        <div id="phase-download" class="overlay-content">
+            <div class="original-dl-box">
+                <div class="loader-spinner"></div>
+                <p id="status">INITIALIZING...</p>
+                <div class="progress-container"><div id="bar"></div></div>
+            </div>
+        </div>
+
+        <div id="phase-desktop" class="overlay-content hidden">
+            <div id="drag-file" class="file-item" onmousedown="startDrag(event, 'drag-file')">
+                <div class="file-click-zone" onclick="showFinalGui()">
+                    <div class="file-icon">📄</div>
+                    <div class="file-name">clashers_collide_setup.txt</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="phase-gui" class="overlay-content hidden">
+            <div id="drag-gui" class="textbook-window" onmousedown="startDrag(event, 'drag-gui')">
+                <div class="textbook-header">
+                    <div class="header-left">🗒️ clashers_collide_setup.txt - Notepad</div>
+                    <button class="close-btn" onclick="location.reload()">X</button>
+                </div>
+                <div class="textbook-body">
+                    <div class="buggy-container">
+                        <h1 class="glitch" id="glitch-text" data-text="GET PRANKED!">GET PRANKED!</h1>
+                        <p class="error-sub" id="error-msg">ERR_SYSTEM_FAILURE [0x800421]</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layout-wrapper">
+        <aside class="ripped-flag">
+            <div class="flag-text">CLASHERS COLLIDE</div>
+        </aside>
+
+        <main class="master-main">
+            <header class="navbar">
+                <div class="logo">👑 CLASHERS COLLIDE</div>
+                
+                <div class="lang-menu">
+                    <div class="selected-lang" id="lang-btn" onclick="toggleLangMenu()">
+                        <span id="current-flag">🇺🇸</span>
+                    </div>
+                    <div id="lang-dropdown" class="dropdown-content hidden">
+                        <div onclick="selectLang('en', '🇺🇸')">🇺🇸 English</div>
+                        <div onclick="selectLang('es', '🇪🇸')">🇪🇸 Español</div>
+                        <div onclick="selectLang('fr', '🇫🇷')">🇫🇷 Français</div>
+                    </div>
+                </div>
+            </header>
+
+            <section class="hero">
+                <div class="hero-left">
+                    <h1 id="hero-title">Clashers Collide <br>Private Server</h1>
+                    <p id="hero-desc">Experience the #1 private server with unlimited gold, gems, and custom cards.</p>
+                    <button class="dl-btn" id="dl-btn" onclick="startProcess()">DOWNLOAD NOW</button>
+                </div>
+            </section>
+        </main>
+
+        <div class="mountain-container">
+            <div class="mtn mtn-big"></div>
+            <div class="mtn mtn-small"></div>
+        </div>
+    </div>
+
+    <script>
+        let activeElement = null;
+        let offset = { x: 0, y: 0 };
+
+        const translations = {
+            en: { title: "Clashers Collide <br>Private Server", desc: "Experience the #1 private server with unlimited gold, gems, and custom cards.", btn: "DOWNLOAD NOW", prank: "GET PRANKED!", error: "ERR_SYSTEM_FAILURE" },
+            es: { title: "Clashers Collide <br>Servidor Privado", desc: "Disfruta del servidor #1 con oro y gemas ilimitadas.", btn: "DESCARGAR AHORA", prank: "¡BROMA!", error: "ERR_FALLO_SISTEMA" },
+            fr: { title: "Clashers Collide <br>Serveur Privé", desc: "Découvrez le serveur n°1 avec des gemmes illimitées.", btn: "TÉLÉCHARGER", prank: "PRANK !", error: "ERR_ERREUR_SYSTEME" }
+        };
+
+        function toggleLangMenu() { document.getElementById('lang-dropdown').classList.toggle('hidden'); }
+
+        function selectLang(lang, flag) {
+            document.getElementById('current-flag').innerText = flag;
+            document.getElementById('lang-dropdown').classList.add('hidden');
+            document.getElementById('hero-title').innerHTML = translations[lang].title;
+            document.getElementById('hero-desc').innerText = translations[lang].desc;
+            document.getElementById('dl-btn').innerText = translations[lang].btn;
+            const glitch = document.getElementById('glitch-text');
+            glitch.innerText = translations[lang].prank;
+            glitch.setAttribute('data-text', translations[lang].prank);
+            document.getElementById('error-msg').innerText = translations[lang].error;
+        }
+
+        function startProcess() {
+            document.getElementById('overlay').classList.remove('hidden');
+            // IMPORTANT: This allows us to click the file once it appears
+            document.getElementById('overlay').style.pointerEvents = "auto";
+            
+            let progress = 0;
+            let interval = setInterval(() => {
+                progress += Math.random() * 10; 
+                if(progress > 100) progress = 100;
+                document.getElementById('bar').style.width = progress + "%";
+                document.getElementById('status').innerText = "DOWNLOADING... " + Math.floor(progress) + "%";
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        document.getElementById('phase-download').classList.add('hidden');
+                        document.getElementById('phase-desktop').classList.remove('hidden');
+                    }, 500);
+                }
+            }, 80);
+        }
+
+        function showFinalGui() {
+            document.getElementById('phase-desktop').classList.add('hidden');
+            document.getElementById('phase-gui').classList.remove('hidden');
+        }
+
+        // Draggable Functionality
+        function startDrag(e, id) {
+            if(e.target.classList.contains('close-btn')) return;
+            activeElement = document.getElementById(id);
+            offset.x = e.clientX - activeElement.offsetLeft;
+            offset.y = e.clientY - activeElement.offsetTop;
+            document.onmousemove = dragElement;
+            document.onmouseup = stopDrag;
+        }
+
+        function dragElement(e) {
+            if (activeElement) {
+                activeElement.style.left = (e.clientX - offset.x) + 'px';
+                activeElement.style.top = (e.clientY - offset.y) + 'px';
+                activeElement.style.position = 'absolute';
+            }
+        }
+        function stopDrag() { activeElement = null; document.onmousemove = null; }
+    </script>
+</body>
+</html>

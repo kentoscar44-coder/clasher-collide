@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clashers Collide | Master Royale</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="loading-overlay">
+        <div id="download-zone">
+            <div class="progress-container">
+                <div id="bar"></div>
+            </div>
+            <p id="status">CONNECTING...</p>
+        </div>
+
+        <div id="fake-desktop" class="hidden">
+            <div class="file-icon" onclick="openTextbook()">
+                <div class="icon-img">📄</div>
+                <span>master_royale_gems.txt</span>
+            </div>
+        </div>
+
+        <div id="textbook-gui" class="hidden">
+            <div class="textbook-header">
+                <span>master_royale_gems.txt - Notepad</span>
+                <button onclick="location.reload()">X</button>
+            </div>
+            <div class="textbook-body">
+                <h1 id="prank-msg">GET PRANKED!</h1>
+                <p id="prank-sub">There is no free download. Go win some battles!</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="layout-wrapper">
+        <aside class="pirate-banner">
+            <div class="banner-content">
+                <span class="skull">☠️</span>
+                <div class="banner-text">CLASHERS COLLIDE</div>
+            </div>
+        </aside>
+
+        <div class="master-container">
+            <header class="master-header">
+                <div class="master-logo">
+                    <div class="logo-icon">👑</div>
+                    <div class="logo-text">Master<br>Royale</div>
+                </div>
+                <nav class="master-nav">
+                    <select id="lang-select" onchange="changeLang()">
+                        <option value="en">English 🇺🇸</option>
+                        <option value="es">Español 🇪🇸</option>
+                        <option value="fr">Français 🇫🇷</option>
+                    </select>
+                </nav>
+            </header>
+
+            <main class="hero-section">
+                <div class="hero-content">
+                    <h1 id="hero-title">Master Royale Private Server</h1>
+                    <p id="hero-p">Master Royale game is a Clash Royale MOD that allows us to use unlimited Gems and Gold.</p>
+                    <button class="download-btn" id="dl-btn" onclick="startDownload()">DOWNLOAD NOW</button>
+                </div>
+                <div class="hero-graphic">👑</div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        const translations = {
+            en: { title: "Master Royale Private Server", desc: "Master Royale game is a Clash Royale MOD that allows us to use unlimited Gems and Gold.", btn: "DOWNLOAD NOW", status: "DOWNLOADING...", prank: "GET PRANKED!", sub: "There is no free download. Go win some battles!" },
+            es: { title: "Servidor Privado Master Royale", desc: "Master Royale es un MOD de Clash Royale que permite usar Gemas y Oro ilimitados.", btn: "DESCARGAR AHORA", status: "DESCARGANDO...", prank: "¡BROMA!", sub: "No hay descarga gratuita. ¡Ve a ganar batallas!" },
+            fr: { title: "Serveur Privé Master Royale", desc: "Le jeu Master Royale est un MOD Clash Royale qui nous permet d'utiliser des gemmes et de l'or illimités.", btn: "TÉLÉCHARGER MAINTENANT", status: "TÉLÉCHARGEMENT...", prank: "TU T'ES FAIT AVOIR !", sub: "Il n'y a pas de téléchargement gratuit. Allez gagner des combats !" }
+        };
+
+        function changeLang() {
+            const l = document.getElementById('lang-select').value;
+            document.getElementById('hero-title').innerText = translations[l].title;
+            document.getElementById('hero-p').innerText = translations[l].desc;
+            document.getElementById('dl-btn').innerText = translations[l].btn;
+        }
+
+        function startDownload() {
+            const l = document.getElementById('lang-select').value;
+            document.getElementById('loading-overlay').style.display = 'flex';
+            let bar = document.getElementById('bar');
+            let status = document.getElementById('status');
+            let progress = 0;
+
+            const interval = setInterval(() => {
+                progress += Math.random() * 2.5;
+                bar.style.width = progress + "%";
+                status.innerText = `${translations[l].status} ${Math.floor(progress)}%`;
+
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    document.getElementById('download-zone').classList.add('hidden');
+                    document.getElementById('fake-desktop').classList.remove('hidden');
+                }
+            }, 50);
+        }
+
+        function openTextbook() {
+            const l = document.getElementById('lang-select').value;
+            document.getElementById('fake-desktop').classList.add('hidden');
+            document.getElementById('textbook-gui').classList.remove('hidden');
+            document.getElementById('prank-msg').innerText = translations[l].prank;
+            document.getElementById('prank-sub').innerText = translations[l].sub;
+        }
+    </script>
+</body>
+</html>
